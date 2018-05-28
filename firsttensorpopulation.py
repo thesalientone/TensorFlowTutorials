@@ -24,10 +24,10 @@ california_housing_dataframe = pd.read_csv(response)
 california_housing_dataframe = california_housing_dataframe.reindex(np.random.permutation(california_housing_dataframe.index))
 california_housing_dataframe["median_house_value"] /= 1000.0
 print california_housing_dataframe.describe()
-# Define the input feature: total_rooms
-my_feature = california_housing_dataframe[["total_rooms"]]
-# Configure a numeric feature column for total_rooms
-feature_columns = [tf.feature_column.numeric_column("total_rooms")]
+# Define the input feature: population
+my_feature = california_housing_dataframe[["population"]]
+# Configure a numeric feature column for population
+feature_columns = [tf.feature_column.numeric_column("population")]
 
 
 #Define the label.
@@ -114,11 +114,11 @@ print calibration_data.describe()
 sample = california_housing_dataframe.sample(n=300)
 
 #Get the min and max
-x_0 = sample["total_rooms"].min()
-x_1 = sample["total_rooms"].max()
+x_0 = sample["population"].min()
+x_1 = sample["population"].max()
 
 #Retrieve the final weight and bias generated during training
-weight = linear_regressor.get_variable_value('linear/linear_model/total_rooms/weights')[0]
+weight = linear_regressor.get_variable_value('linear/linear_model/population/weights')[0]
 bias = linear_regressor.get_variable_value('linear/linear_model/bias_weights')
 
 #print weight
@@ -131,17 +131,17 @@ bias = linear_regressor.get_variable_value('linear/linear_model/bias_weights')
 # plt.plot([x_0, x_1], [y_0, y_1], c='r')
 # #Label the axes
 # plt.ylabel("median_house_value")
-# plt.xlabel("total_rooms")
+# plt.xlabel("population")
 #
 # #Plot a scatter plot from our data sample
-# plt.scatter(sample["total_rooms"], sample["median_house_value"])
+# plt.scatter(sample["population"], sample["median_house_value"])
 # #Display graph
 # plt.show()
 #
 
 #The above code is summarized below in a function.
 
-def train_model(learning_rate, steps, batch_size, input_feature="total_rooms"):
+def train_model(learning_rate, steps, batch_size, input_feature="population"):
   """Trains a linear regression model of one feature.
 
   Args:
@@ -153,7 +153,7 @@ def train_model(learning_rate, steps, batch_size, input_feature="total_rooms"):
       to use as input feature.
   """
 
-  periods = 10
+  periods = 30
   steps_per_period = steps / periods
 
   my_feature = input_feature
@@ -243,7 +243,8 @@ def train_model(learning_rate, steps, batch_size, input_feature="total_rooms"):
 
 
 train_model(
-    learning_rate=0.00002,
+    learning_rate=0.1,
     steps=500,
-    batch_size=5
+    batch_size=5,
+    input_feature="median_income"
 )
